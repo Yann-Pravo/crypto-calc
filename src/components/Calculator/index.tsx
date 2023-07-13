@@ -1,14 +1,16 @@
 import React, { useContext, useMemo, useState } from "react";
-import { evaluate, isNumber } from "mathjs";
+import { evaluate } from "mathjs";
 import Button from "./Button";
 import { CoinsContext } from "../../contexts/coins";
 import Select from "../Select";
 import { COIN } from "../../contexts/helpers";
 import { isCoinDisabled, isOperatorDisabled } from "./helpers";
 import classNames from "classnames";
+import Tooltip from "../Tooltip";
 
 const Calculator: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const { list, coins, isLoading } = useContext(CoinsContext);
   const [input, setInput] = useState<string>("0");
   const [validResult, setValidResult] = useState<number>(0);
@@ -29,6 +31,7 @@ const Calculator: React.FC = () => {
       console.log(result);
       setValidResult(result);
     } catch {
+      setShowTooltip(true);
       return;
     }
   };
@@ -66,7 +69,14 @@ const Calculator: React.FC = () => {
   const coinDisabled = useMemo(() => isCoinDisabled(input), [input]);
 
   return (
-    <div className="App">
+    <>
+      <Tooltip
+        type="error"
+        text="Une erreur est survenue"
+        subtext="La formule est invalide"
+        show={showTooltip}
+        setShow={setShowTooltip}
+      />
       <div className="bg-gray-200 w-screen h-screen flex justify-center items-center">
         <div className="w-64 h-auto bg-white rounded-2xl shadow-xl border-4 border-gray-100">
           <div className="w-auto mx-3 my-2 h-6 flex justify-between">
@@ -173,7 +183,7 @@ const Calculator: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,7 +1,11 @@
 export const isCoinDisabled = (input: string) => {
   const lastChar = input[input.length - 1];
 
-  if (!lastChar || lastChar === " " || (input.length === 1 && lastChar === "0"))
+  if (
+    !lastChar ||
+    (lastChar === " " && input.slice(-2) !== ") ") ||
+    (input.length === 1 && lastChar === "0")
+  )
     return false;
 
   return (
