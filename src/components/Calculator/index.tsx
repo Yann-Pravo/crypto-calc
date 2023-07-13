@@ -1,8 +1,15 @@
-import React, { useState } from "react";
-import { evaluate } from "mathjs";
+import React, { useContext, useMemo, useState } from "react";
+import { evaluate, isNumber } from "mathjs";
 import Button from "./Button";
+import { CoinsContext } from "../../contexts/coins";
+import Select from "../Select";
+import { COIN } from "../../contexts/helpers";
+import { isCoinDisabled, isOperatorDisabled } from "./helpers";
+import classNames from "classnames";
 
 const Calculator: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const { list, coins, isLoading } = useContext(CoinsContext);
   const [input, setInput] = useState<string>("0");
   const [validResult, setValidResult] = useState<number>(0);
 
@@ -13,7 +20,12 @@ const Calculator: React.FC = () => {
 
   const onCalculate = () => {
     try {
-      const result = evaluate(input);
+      const result = evaluate(
+        input
+          .split(" ")
+          .map((value) => (coins[value] ? coins[value].current_price : value))
+          .join("")
+      );
       console.log(result);
       setValidResult(result);
     } catch {
@@ -28,8 +40,8 @@ const Calculator: React.FC = () => {
     }
 
     if (
-      (typeof Number(value) && !isNaN(Number(value))) ||
-      [".", "(", ")"].includes(value)
+      (typeof Number(value) === "number" && !isNaN(Number(value))) ||
+      value === "."
     ) {
       const temp = input + value;
       setInput(temp);
@@ -38,6 +50,20 @@ const Calculator: React.FC = () => {
       setInput(temp);
     }
   };
+
+  const onSelectCoin = (coin: COIN) => {
+    setOpen(false);
+    if (input === "0") {
+      setInput(String(coin.id));
+      return;
+    }
+
+    const temp = `${input}${coin.id}`;
+    setInput(temp);
+  };
+
+  const operatorDisabled = useMemo(() => isOperatorDisabled(input), [input]);
+  const coinDisabled = useMemo(() => isCoinDisabled(input), [input]);
 
   return (
     <div className="App">
@@ -51,7 +77,27 @@ const Calculator: React.FC = () => {
             </div>
           </div>
           <div className="w-auto m-3 h-28 text-right space-y-2 py-2">
-            <div className="text-gray-700">{input}</div>
+            <div className="text-gray-700 flex items-center justify-end">
+              {input.split(" ").map((value, index) => (
+                <div
+                  className={classNames("flex items-center justify-end", {
+                    "pl-1": index !== 0,
+                  })}
+                  key={index}
+                >
+                  {coins[value] ? (
+                    <img
+                      src={coins[value].image}
+                      alt={coins[value].name}
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    value
+                  )}
+                </div>
+              ))}
+            </div>
             <div className="text-black font-bold text-3xl">
               {validResult.toFixed(2)}
             </div>
@@ -61,32 +107,65 @@ const Calculator: React.FC = () => {
               <Button onClick={onClear} value="C" color="yellow" />
               <Button onClick={onClickValue} value="(" />
               <Button onClick={onClickValue} value=")" />
-              <Button onClick={onClickValue} value="/" color="orange" />
+              <Button
+                onClick={onClickValue}
+                value="/"
+                color="orange"
+                disabled={operatorDisabled}
+              />
             </div>
             <div className="m-2 flex justify-between">
               <Button onClick={onClickValue} value="7" />
               <Button onClick={onClickValue} value="8" />
               <Button onClick={onClickValue} value="9" />
-              <Button onClick={onClickValue} value="*" color="orange" />
+              <Button
+                onClick={onClickValue}
+                value="*"
+                color="orange"
+                disabled={operatorDisabled}
+              />
             </div>
             <div className="m-2 flex justify-between">
               <Button onClick={onClickValue} value="4" />
               <Button onClick={onClickValue} value="5" />
               <Button onClick={onClickValue} value="6" />
-              <Button onClick={onClickValue} value="-" color="orange" />
+              <Button
+                onClick={onClickValue}
+                value="-"
+                color="orange"
+                disabled={operatorDisabled}
+              />
             </div>
             <div className="m-2 flex justify-between">
               <Button onClick={onClickValue} value="1" />
               <Button onClick={onClickValue} value="2" />
               <Button onClick={onClickValue} value="3" />
-              <Button onClick={onClickValue} value="+" color="orange" />
+              <Button
+                onClick={onClickValue}
+                value="+"
+                color="orange"
+                disabled={operatorDisabled}
+              />
             </div>
             <div className="m-2 flex justify-between">
-              <Button onClick={onClickValue} value="0" className="w-full" />
-              <div className="flex w-full ml-3 justify-between">
-                <Button onClick={onClickValue} value="." />
-                <Button onClick={onCalculate} value="=" color="green" />
+              <div className="relative">
+                <Button
+                  onClick={() => setOpen(true)}
+                  value="₿"
+                  color="orange"
+                  disabled={coinDisabled}
+                />
+                <Select
+                  coins={list}
+                  isLoading={isLoading}
+                  open={open}
+                  setOpen={setOpen}
+                  onSelect={onSelectCoin}
+                />
               </div>
+              <Button onClick={onClickValue} value="0" />
+              <Button onClick={onClickValue} value="." />
+              <Button onClick={onCalculate} value="=" color="green" />
             </div>
             <div className="flex justify-center mt-5">
               <div className="w-20 h-1 bg-gray-100 rounded-l-xl rounded-r-xl"></div>
