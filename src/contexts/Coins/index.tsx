@@ -1,16 +1,16 @@
 import React, { createContext, useEffect, useState } from "react";
-import useGetCoinsList from "../hooks/getCoinsList";
+import useGetCoinsList from "../../hooks/getCoinsList";
 import CoinsContextInterface, { COIN } from "./helpers";
 
 export const CoinsContext = createContext<CoinsContextInterface>(
   {} as CoinsContextInterface
 );
 
-interface AppContextProviderProps {
+interface CoinsContextProviderProps {
   children: React.ReactNode;
 }
 
-const CoinsContextProvider = ({ children }: AppContextProviderProps) => {
+const CoinsContextProvider = ({ children }: CoinsContextProviderProps) => {
   const { data = [], isLoading } = useGetCoinsList();
   const [coins, setCoins] = useState<{ [key: string]: COIN }>({});
 

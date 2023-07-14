@@ -1,17 +1,18 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { evaluate } from "mathjs";
 import Button from "./Button";
-import { CoinsContext } from "../../contexts/coins";
+import { CoinsContext } from "../../contexts/Coins";
 import Select from "../Select";
-import { COIN } from "../../contexts/helpers";
-import { isCoinDisabled, isOperatorDisabled } from "./helpers";
+import { COIN } from "../../contexts/Coins/helpers";
 import classNames from "classnames";
 import Tooltip from "../Tooltip";
+import { ChartContext } from "../../contexts/Chart";
 
 const Calculator: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const { list, coins, isLoading } = useContext(CoinsContext);
+  const { setSelectectedCoins } = useContext(ChartContext);
   const [input, setInput] = useState<string>("0");
   const [validResult, setValidResult] = useState<number>(0);
 
@@ -65,8 +66,17 @@ const Calculator: React.FC = () => {
     setInput(temp);
   };
 
-  const operatorDisabled = useMemo(() => isOperatorDisabled(input), [input]);
-  const coinDisabled = useMemo(() => isCoinDisabled(input), [input]);
+  useEffect(() => {
+    const temp = input.split(" ").reduce((result: COIN[], value: string) => {
+      if (coins[value]) {
+        return result.concat(coins[value]);
+      }
+      return result;
+    }, []);
+
+    setSelectectedCoins(temp);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validResult]);
 
   return (
     <>
@@ -117,45 +127,25 @@ const Calculator: React.FC = () => {
               <Button onClick={onClear} value="C" color="yellow" />
               <Button onClick={onClickValue} value="(" />
               <Button onClick={onClickValue} value=")" />
-              <Button
-                onClick={onClickValue}
-                value="/"
-                color="orange"
-                disabled={operatorDisabled}
-              />
+              <Button onClick={onClickValue} value="/" color="orange" />
             </div>
             <div className="m-2 flex justify-between">
               <Button onClick={onClickValue} value="7" />
               <Button onClick={onClickValue} value="8" />
               <Button onClick={onClickValue} value="9" />
-              <Button
-                onClick={onClickValue}
-                value="*"
-                color="orange"
-                disabled={operatorDisabled}
-              />
+              <Button onClick={onClickValue} value="*" color="orange" />
             </div>
             <div className="m-2 flex justify-between">
               <Button onClick={onClickValue} value="4" />
               <Button onClick={onClickValue} value="5" />
               <Button onClick={onClickValue} value="6" />
-              <Button
-                onClick={onClickValue}
-                value="-"
-                color="orange"
-                disabled={operatorDisabled}
-              />
+              <Button onClick={onClickValue} value="-" color="orange" />
             </div>
             <div className="m-2 flex justify-between">
               <Button onClick={onClickValue} value="1" />
               <Button onClick={onClickValue} value="2" />
               <Button onClick={onClickValue} value="3" />
-              <Button
-                onClick={onClickValue}
-                value="+"
-                color="orange"
-                disabled={operatorDisabled}
-              />
+              <Button onClick={onClickValue} value="+" color="orange" />
             </div>
             <div className="m-2 flex justify-between">
               <div className="relative">
@@ -163,7 +153,6 @@ const Calculator: React.FC = () => {
                   onClick={() => setOpen(true)}
                   value="₿"
                   color="orange"
-                  disabled={coinDisabled}
                 />
                 <Select
                   coins={list}

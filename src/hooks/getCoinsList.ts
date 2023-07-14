@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { API_COINS_MARKET, client } from "../api";
-import { COIN } from "../contexts/helpers";
+import { COIN } from "../contexts/Coins/helpers";
 
 const getCoinsList = async (): Promise<COIN[]> => {
   const { data } = await client.get(API_COINS_MARKET, {
@@ -20,6 +20,7 @@ const getCoinsList = async (): Promise<COIN[]> => {
 
 const useGetCoinsList = (props = {}) => {
   return useQuery<COIN[], AxiosError>(["coinsList"], getCoinsList, {
+    refetchOnWindowFocus: false,
     ...props,
   });
 };

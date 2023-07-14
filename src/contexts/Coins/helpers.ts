@@ -6,6 +6,10 @@ export type COIN = {
   current_price: number;
 };
 
+export type COIN_HISTORY = {
+  prices: [number, number];
+};
+
 export default interface CoinsContextInterface {
   list: COIN[];
   coins: { [key: string]: COIN };
