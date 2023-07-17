@@ -36,6 +36,7 @@ to calculate it.
 # Some things left to do
 - Add formula price history
 - Search token with 0x address
+- Comment and clean code
 - E2E tests
 - Unit tests
 - ...
