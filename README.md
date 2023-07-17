@@ -1,3 +1,46 @@
+# App overview
+<img width="832" alt="image" src="https://github.com/Yann-Pravo/mass-test/assets/625291/53a091aa-3957-496a-91e7-087b8fe527e8">
+
+
+
+
+
+
+# App functionnalities
+You can calculate anything you need with this live cryptocurrency calculator.
+## Create your formula
+<img width="274" alt="image" src="https://github.com/Yann-Pravo/mass-test/assets/625291/5d1048a4-1449-4348-98f7-e6bb79e7cde1">
+
+## Click on the orange ₿ button
+to open the token selector and search the one you want with it's name or token id.
+
+<img width="614" alt="image" src="https://github.com/Yann-Pravo/mass-test/assets/625291/9c08072c-1481-4185-aa43-9085c856d7dc">
+
+
+
+## Click on the green = button
+to calculate it.
+
+<img width="292" alt="image" src="https://github.com/Yann-Pravo/mass-test/assets/625291/aac93e68-c908-440d-a8bb-c0d9359c999a">
+
+
+## See the price history of every cryptocurrencies involved.
+
+<img width="548" alt="image" src="https://github.com/Yann-Pravo/mass-test/assets/625291/09289659-bf9e-47c5-9f83-e149bff79883">
+
+
+## The app will display a tooltip error if the formula is not valid
+
+<img width="537" alt="image" src="https://github.com/Yann-Pravo/mass-test/assets/625291/b0e9d20c-ae4a-4149-b6f9-e67c31093097">
+
+# Some things left to do
+- Add formula price history
+- Search token with 0x address
+- E2E tests
+- Unit tests
+- ...
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
