@@ -4,6 +4,8 @@ export type COIN = {
   name: string;
   image: string;
   current_price: number;
+  ath: number;
+  market_cap: number;
 };
 
 export type COIN_HISTORY = {

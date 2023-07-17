@@ -32,7 +32,7 @@ const ChartContextProvider = ({ children }: ChartContextProviderProps) => {
 
   const extractSelectedCoins = (input: string) => {
     const temp = input.split(" ").reduce((result: COIN[], value: string) => {
-      if (coins[value]) {
+      if (coins[value] && !result.includes(coins[value])) {
         return result.concat(coins[value]);
       }
       return result;

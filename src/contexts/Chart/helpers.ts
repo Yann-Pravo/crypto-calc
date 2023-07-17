@@ -35,3 +35,9 @@ export const colors: { [key: string]: string } = {
 
 export const getRandomColor = () =>
   Math.floor(Math.random() * 16777215).toString(16);
+
+export const getCurrencyValue = (value: number, isCompact?: boolean) =>
+  `$${value.toLocaleString("fr-FR", {
+    maximumFractionDigits: value > 1 ? 2 : 5,
+    notation: isCompact ? "compact" : "standard",
+  })}`;

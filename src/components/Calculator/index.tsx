@@ -80,7 +80,7 @@ const Calculator: React.FC = () => {
         show={showTooltip}
         setShow={setShowTooltip}
       />
-      <div className="w-64 h-auto bg-white rounded-2xl shadow-xl border-4 border-gray-100">
+      <div className="w-64 min-w-[256px] h-auto bg-white rounded-2xl shadow-xl border-4 border-gray-100">
         <div className="w-auto mx-3 my-2 h-6 flex justify-between">
           <div className="flex items-center text-xs space-x-1">
             <i className="fas fa-signal"></i>
