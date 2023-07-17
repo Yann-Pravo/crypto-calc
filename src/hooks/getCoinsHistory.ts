@@ -1,8 +1,9 @@
-import { UseQueryResult, useQueries, useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { useQueries } from "@tanstack/react-query";
 import { API_COIN_HISTORY, client, getPath } from "../api";
 import { COIN, COIN_HISTORY } from "../contexts/Coins/helpers";
 import { useCallback, useMemo } from "react";
+
+export type COIN_WITH_HISTORY = COIN & COIN_HISTORY;
 
 const getCoinHistory = async (id: string): Promise<COIN_HISTORY> => {
   const { data } = await client.get(getPath(API_COIN_HISTORY, { id }), {
@@ -10,6 +11,7 @@ const getCoinHistory = async (id: string): Promise<COIN_HISTORY> => {
       id,
       vs_currency: "usd",
       days: "30",
+      interval: "daily",
     },
   });
 
@@ -32,22 +34,19 @@ const useGetCoinsHistory = (list: COIN[], props = {}) => {
     queries.forEach((query) => query.refetch());
   }, [queries]);
 
-  const dataAll = useMemo(
-    () =>
-      queries.reduce(
-        (
-          result: COIN_HISTORY[],
-          value: UseQueryResult<COIN_HISTORY, unknown>
-        ) => {
-          if (value.data) {
-            return result.concat(value.data);
-          }
-          return result;
-        },
-        []
-      ),
-    [queries]
-  );
+  const dataAll = useMemo(() => {
+    return list.reduce((result: COIN_WITH_HISTORY[], value: COIN, index) => {
+      const query = queries[index];
+      if (query && query.data) {
+        const { prices } = query.data;
+        return result.concat({
+          ...value,
+          prices: prices.slice(-30),
+        });
+      }
+      return result;
+    }, []);
+  }, [list, queries]);
 
   const isLoadingAll = useMemo(
     () => Boolean(queries.find((query) => query.isLoading)),

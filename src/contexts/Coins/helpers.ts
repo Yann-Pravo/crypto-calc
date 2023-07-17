@@ -7,7 +7,7 @@ export type COIN = {
 };
 
 export type COIN_HISTORY = {
-  prices: [number, number];
+  prices: [number, number][];
 };
 
 export default interface CoinsContextInterface {
